@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-from scipy.stats import ttest_ind, pearsonr
+from scipy.stats import ttest_ind, pearsonr, kstest
 
 mpl.rcParams['axes.linewidth'] = 3
 mpl.rcParams['ytick.major.size'] = 10
@@ -35,7 +35,7 @@ ax.vlines(0,-5,7,color='k',linestyle='--')
 ax.hlines(1.3,-30,30,color='k',linestyle='--')
 ax.set_ylim(-0.2,6)
 ax.set_xlim(-18,18)
-ax.set_xlabel('log$_2$ fold-change (S/T)')
+ax.set_xlabel('normalized $log_2(FC)$ (S/T)')
 ax.set_ylabel('-log$_{10}$ adj. p-value')
 plt.savefig('Fig.2F.svg')
 plt.savefig('Fig.2F.png')
@@ -55,15 +55,16 @@ fig,ax = plt.subplots(figsize=[5,5])
 ax.hist(retained['S/T Avg'],bins=bins,histtype='step',density=False,lw=3,color='b',label='retained')
 ax.hist(perturbed['S/T Avg'],bins=bins,histtype='step',density=False,lw=3,color='r',label='perturbed')
 ax.legend(title='strucutre:',fontsize=16)
-for quant in quants.values[1:-1]:
-    ax.vlines(quant,0,100,color='lightgrey',ls='--',zorder=0)
+ax.vlines(retained['S/T Avg'].median(),0,100,color='blue',ls='--',zorder=0,alpha=0.5,lw=3)
+ax.vlines(perturbed['S/T Avg'].median(),0,100,color='red',ls='--',zorder=0,alpha=0.5,lw=3)
 # ax.set_ylim(0,6.5)
 ax.set_xlabel('resolubility')
 ax.set_ylim(0,90)
 ax.set_ylabel('protein count')
-pval = ttest_ind(retained['S/T Avg'],perturbed['S/T Avg']).pvalue
-retained['S/T Avg'].median()
-perturbed['S/T Avg'].median()
+pval = kstest(retained['S/T Avg'],perturbed['S/T Avg']).pvalue
+print('pval = %s\nretained median = %s\nperturbed median = %s' % (pval,
+                                                                  retained['S/T Avg'].median(),perturbed['S/T Avg'].median()))
+
 plt.savefig('Fig.2G.svg')
 #%% Protein level LiP coverage
 
