@@ -33,9 +33,9 @@ for i,sheet_name in enumerate(categories):
     ax[i].set_xticklabels(data.index.astype('string').str.split('-').str[0][::4])
 ax[0].set_ylabel('fraction of \n perturbed peptides')
 plt.tight_layout()
-fig.savefig('LiP_distros2.svg')
+fig.savefig('Fig.3G-K.svg')
 #%%
-categories = ['Cellular location','pI','CCT binding sites','SSB binding sites']
+categories = ['Cellular location','CCT binding sites','SSB binding sites','pI']
 cmap = plt.cm.rainbow(np.linspace(0,1,len(categories)))
 fig,ax=plt.subplots(1,len(categories),figsize=[4*len(categories),5])
 for i,sheet_name in enumerate(categories):
@@ -52,6 +52,7 @@ for i,sheet_name in enumerate(categories):
         ax[i].set_xticklabels(data.index.astype('string').str.split('-').str[0][::2])
 ax[0].set_ylabel('fraction of \n perturbed peptides')
 plt.tight_layout()
+fig.savefig('Fig.SX.svg')
 
 #%%
 N_bins=8
