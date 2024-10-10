@@ -21,7 +21,7 @@ mpl.rcParams['svg.fonttype'] = 'none'
 
 #%%
 
-df = pd.read_csv('../SI/Table_S8.csv',index_col=0)
+df = pd.read_csv('../SI/Table_S10.csv',index_col=0)
 df = df[(df['N']>100)&(df['Structrually Altered']>0)]
 df['effect']=np.log2(df['Structrually Altered']/df['Expected Structrually Altered'])
 df['-logpval']=-np.log10(df['Chi Sq P-value'])
