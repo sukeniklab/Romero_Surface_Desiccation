@@ -19,7 +19,7 @@ mpl.rcParams['font.size'] = 20
 mpl.rcParams['svg.fonttype'] = 'none'
 
 #%%
-xl = pd.ExcelFile('Fig.3.LiP.xlsx')
+xl = pd.ExcelFile('../SI/Fig.3.LiP.xlsx')
 cmap = ['green','purple','orange','red','blue']
 categories = ['log(abundance)','length','Domains','% disordered','log(interactors)']
 fig,ax=plt.subplots(1,len(categories),figsize=[4*len(categories),5],sharey=True)
@@ -34,22 +34,4 @@ for i,sheet_name in enumerate(categories):
 ax[0].set_ylabel('fraction of \n perturbed peptides')
 plt.tight_layout()
 fig.savefig('Fig.3G-K.svg')
-#%%
-categories = ['pI','CCT binding sites','SSB binding sites','Cellular location']
-cmap = plt.cm.rainbow(np.linspace(0,1,len(categories)))
-fig,ax=plt.subplots(1,len(categories),figsize=[4*len(categories),7])
-for i,sheet_name in enumerate(categories):
-    data = xl.parse(sheet_name,index_col=0)
-    # ticks = np.a
-    ax[i].bar(np.arange(len(data)),data['structurally perturbed peptide fraction'],
-              color=cmap[i],alpha=0.4)
-    ax[i].set_xlabel(sheet_name)
-    if sheet_name == 'Cellular location':
-        ax[i].set_xticks(np.arange(len(data)))
-        ax[i].set_xticklabels(data.index.astype('string'),rotation=45,ha='right',fontsize=12)
-    else:
-        ax[i].set_xticks(np.arange(len(data))[::2])
-        ax[i].set_xticklabels(data.index.astype('string').str.split('-').str[0][::2])
-ax[0].set_ylabel('fraction of \n perturbed peptides')
-plt.tight_layout()
-fig.savefig('Fig.S4.svg')
+
