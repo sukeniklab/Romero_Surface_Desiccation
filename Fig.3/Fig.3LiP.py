@@ -19,7 +19,7 @@ mpl.rcParams['font.size'] = 20
 mpl.rcParams['svg.fonttype'] = 'none'
 
 #%%
-xl = pd.ExcelFile('../SI/Fig.3.LiP.xlsx')
+xl = pd.ExcelFile('./Fig.3.LiP.xlsx')
 cmap = ['green','purple','orange','red','blue']
 categories = ['log(abundance)','length','Domains','% disordered','log(interactors)']
 fig,ax=plt.subplots(1,len(categories),figsize=[4*len(categories),5],sharey=True)
