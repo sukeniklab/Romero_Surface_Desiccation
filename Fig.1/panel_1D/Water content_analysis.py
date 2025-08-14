@@ -94,7 +94,7 @@ w = WLoss_all['Weight  %']
 def exponential_decay(x, a, b, c):
     return a * np.exp(-b * x) + c
 
-df_mean = WLoss_all.groupby('time').mean().reset_index()
+df_mean = WLoss_all.groupby('time')['Weight  %'].mean().reset_index()
 x_data = df_mean['time'].values
 y_data = df_mean['Weight  %'].values
 
@@ -124,17 +124,17 @@ delta = perr[0] * np.exp(-b * x1_data) + perr[1] * a * x1_data * np.exp(-b * x1_
 y_upper = y_fitted + delta
 y_lower = y_fitted - delta
 
-fig, ax1 = plt.subplots()
+fig, ax1 = plt.subplots(figsize=[5,5])
 
 # Plot the data
-ax1.scatter(WLoss_all['time'], WLoss_all['Weight  %'], label='Original Data', alpha=0.6)
+ax1.scatter(WLoss_all['time'], WLoss_all['Weight  %'], label='Original Data', alpha=0.6, edgecolor='k',s=150)
 ax1.plot(x1_data, y_fitted, label='Fitted Curve', color='darkblue')
 
 # Plot the confidence interval
 ax1.fill_between(x1_data, y_lower, y_upper, color='lightblue', alpha=0.5, label='Confidence Interval')
 
 plt.xlabel('time (h)')
-plt.ylabel('Weight %')
+plt.ylabel('mass %')
 
 means = 11.1875
 y1 = means - 1.178747004
@@ -143,11 +143,14 @@ y2 = means + 1.178747004
 ax1.axhline(y=means, color='r')
 ax1.axhline(y=y1, color='r', linewidth=.2)
 ax1.axhline(y=y2, color='r', linewidth=.2)
-ax1.text(-1, 13.2, 'Final water content 11.2%', fontsize=12, color='red')
+ax1.text(1, 5, 'desiccated water content', fontsize=12, color='red')
 
 ax1.fill_between(np.arange(-3, 43, 0.1), y1, y2, color='lightcoral', alpha=0.5)
 
-ax1.set_xlim(-3, 43)
+ax1.set_xlim(0, 43)
+ax1.set_ylim(0, 100)
 #ax1.legend()
 
 plt.show()
+
+fig.savefig('Fig.1D.svg')

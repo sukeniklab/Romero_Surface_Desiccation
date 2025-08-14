@@ -11,7 +11,6 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import scipy
 from scipy.stats import ttest_ind, false_discovery_control, pearsonr
-from matplotlib_venn import venn2, venn3, venn3_circles
 import requests
 
 mpl.rcParams['axes.linewidth'] = 3
@@ -104,7 +103,6 @@ ax[0].set_ylabel('S/T')
 plt.savefig('Fig.S2.svg')
 
 #%% S/(S+P) vs S/T (Fig. 2B)
-
 fig,ax=plt.subplots(figsize=[5,5],sharex=False,sharey=False)
 sliced=data[['S/T_mean','S/SP_mean']].dropna()
 ax.scatter(sliced['S/T_mean'],sliced['S/SP_mean'],s=10,edgecolor='k',lw=0.5,alpha=0.5)
@@ -116,16 +114,39 @@ ax.set_xlabel('S/T')
 ax.set_ylabel('S/(S+P)')
 plt.savefig('Fig.2B.svg')
 
-#%% S/P volcano plot (Fig. 2C)
+#%% Get phenotype of gene-associated knockouts from SGD
+phenotype=pd.read_table('../SI/Table_S11.tsv')
+phenotype['pheno'] = phenotype['Phenotype'].str.split(' ').str[0]
+pheno_df = pd.DataFrame()
+for gene in phenotype['Gene'].unique():
+    sliced = phenotype[phenotype['Gene']==gene]
+    pheno_df.loc[gene,'pheno']=str(sliced['pheno'].unique()).replace('[','').replace(']','').replace("'",'').replace(" ",", ")
+all_phenos = pheno_df['pheno'].unique()
+pheno_df['pheno_code']=pheno_df['pheno'].astype('category').cat.codes
 
+#%% S/P volcano plot (Fig. 2C)
+colors=plt.cm.jet(np.linspace(0,1,len(all_phenos)))
 fig,ax = plt.subplots(figsize=(5,5))
 ax.scatter(np.log2(data['S/P_mean']),data['-logPval_S/P'],s=10,lw=0.5,edgecolor='k',alpha=0.5)
+sliced = pd.merge(data,pheno_df,left_on='PG.Genes',right_index=True)
+sliced = sliced[(sliced['S/P_mean']>1)&(sliced['-logPval_S/P']>1.3)]
+print(len(data[(data['S/P_mean']>1)&(data['-logPval_S/P']>1.3)]))
+i=0
+for pheno in range(len(all_phenos)):
+    sliced2=sliced[sliced['pheno_code']==pheno]
+    print('%s %i'%(all_phenos[pheno],len(sliced2)))
+    i+=len(sliced2)
+    # ax.scatter(np.log2(sliced2['S/P_mean']),sliced2['-logPval_S/P'],s=30,lw=0.5,edgecolor='k',color=colors[sliced2['pheno_code']],label=all_phenos[pheno])
+    ax.scatter(np.log2(sliced2['S/P_mean']),sliced2['-logPval_S/P'],s=30,lw=0.5,edgecolor='k',color='r',alpha=0.5)
+print(i)
+#ax.legend(fontsize=8)
 ax.plot([0,0],[-1,8],'--',c='k')
-ax.plot([-8,3],[1.3,1.3],'--',c='k')
+ax.plot([-8,4],[1.3,1.3],'--',c='k')
 ax.set_xlabel('$log_2(FC)$ (S/P)')
 ax.set_ylabel('$-log_{10}$ (adj. Pval)')
-ax.set_xlim(-7,3)
+ax.set_xlim(-7,4)
 ax.set_ylim(0,5)
+ax.set_xticks(np.arange(-6,6,2))
 plt.savefig('Fig.2C.svg')
 
 #%% S/T histogram (Fig. 2D)

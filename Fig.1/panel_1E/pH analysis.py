@@ -44,9 +44,9 @@ for date in dates:
                               (pH_all.Fraction==fraction)].pH.mean()
         pH_err = pH_all[(pH_all.Date==date) & 
                              (pH_all.Fraction==fraction)].pH.std()
-        pH_aggregated_df = pH_aggregated_df.append({'Date':date,'Fraction':fraction,
+        pH_aggregated_df = pd.concat([pH_aggregated_df,pd.DataFrame({'Date':date,'Fraction':fraction,
                                                             'pH_mean':pH_mean,
-                                                            'pH_err':pH_err}, ignore_index=True)
+                                                            'pH_err':pH_err},index=[0])], ignore_index=True)
 
 #%% bar plot
 
@@ -82,3 +82,5 @@ ax.plot([0, 0, 1, 1], [pH_y_max - 0.5, pH_y_max, pH_y_max, pH_y_max - 0.5], lw=1
 ax.legend_.remove()
 ax.set_xlabel('')
 ax.set_ylabel('pH')
+
+fig.savefig('Fig.1E.svg')

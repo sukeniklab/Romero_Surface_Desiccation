@@ -69,4 +69,5 @@ ax.set_xlabel('')
 ax.set_ylabel('$CFU_{after}\ /\ CFU_{before}$')
 ax.set_yscale('log')
 
+fig.savefig('Fig.1A.svg')
 

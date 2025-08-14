@@ -18,7 +18,7 @@ mpl.rcParams['xtick.major.width'] = 3
 mpl.rcParams['font.size'] = 20
 
 #%% lysate BCA assays
-data = pd.read_csv('Fig.1X_BCA_results.csv',index_col=0)
+data = pd.read_csv('Fig.1F_BCA_results.csv',index_col=0)
 f_S = data['S/S+P'].mean()
 f_S_err = data['S/S+P'].std()
 f_P = data['P/S+P'].mean()
@@ -39,3 +39,5 @@ ax.spines[['right', 'top']].set_visible(False)
 ax.set_xticks([])
 ax.set_xticklabels([])
 ax.set_ylabel('fraction of total mass')
+fig.savefig('Fig.1F.svg')
+# %%
